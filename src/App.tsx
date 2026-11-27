@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { Layout, type NavRoute } from './components/Layout';
 import { ActionsCalendarPage } from './pages/ActionsCalendarPage';
 import { AdminPage } from './pages/AdminPage';
@@ -86,9 +87,18 @@ const AppRouter: React.FC = () => {
     }
   };
 
+  const routeKey = 'id' in route ? `${route.page}-${route.id}` : route.page;
+
   return (
     <Layout route={route} onNavigate={setRoute}>
-      {renderPage()}
+      <motion.div
+        key={routeKey}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+      >
+        {renderPage()}
+      </motion.div>
     </Layout>
   );
 };

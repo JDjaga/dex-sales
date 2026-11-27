@@ -3,6 +3,7 @@ import { ArrowRight, KeyRound, RefreshCw } from 'lucide-react';
 import { BrandLogo } from '../components/BrandLogo';
 import { Button, Card, ErrorAlert, Field, InfoBanner, Modal, SuccessBanner, inputCls } from '../components/ui';
 import { useCrm } from '../store/crmStore';
+import { StaggerContainer, StaggerItem } from '../components/motion';
 
 export const AuthPage: React.FC = () => {
   const { state, signIn, signInAsUser, resetDemoWorkspace } = useCrm();
@@ -31,8 +32,9 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F4F8FF] flex flex-col justify-center py-10 px-4 sm:px-6">
-      <div className="max-w-4xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <StaggerContainer className="max-w-4xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left: Sign-in form */}
+        <StaggerItem>
         <Card className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between">
           <div>
             <BrandLogo size="md" />
@@ -106,8 +108,10 @@ export const AuthPage: React.FC = () => {
             </button>
           </div>
         </Card>
+        </StaggerItem>
 
         {/* Right: 1-Click Demo Role Access */}
+        <StaggerItem>
         <Card className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between bg-white">
           <div>
             <InfoBanner
@@ -141,7 +145,8 @@ export const AuthPage: React.FC = () => {
             Role permissions and record visibility (including Partner Viewer isolation) are enforced across all lists, search, reports, exports, and briefs.
           </p>
         </Card>
-      </div>
+        </StaggerItem>
+      </StaggerContainer>
 
       <Modal
         open={resetOpen}

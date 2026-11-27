@@ -13,6 +13,8 @@ import {
 import { addDaysIso, downloadCsv, formatCents, formatShortDate, parseCsv, todayIso, toCsv } from '../lib/format';
 import { useCrm } from '../store/crmStore';
 import { isManagerPlus } from '../store/policy';
+import { AreaChart, CHART_COLORS, DonutChart } from '../components/charts';
+import { FadeIn } from '../components/motion';
 
 export const ReportsPage: React.FC = () => {
   const {
@@ -58,6 +60,27 @@ export const ReportsPage: React.FC = () => {
     }
     return Object.entries(counts);
   }, [visibleActivities, fromDate, toDate]);
+
+  // Revenue trend across the selected date range (6 equal buckets)
+  const revenueTrend = useMemo(() => {
+    const bucketCount = 6;
+    const startMs = Date.parse(`${fromDate}T00:00:00`);
+    const endMs = Date.parse(`${toDate}T00:00:00`);
+    if (Number.isNaN(startMs) || Number.isNaN(endMs) || endMs <= startMs) return [];
+    const span = endMs - startMs;
+    const bucketMs = span / bucketCount;
+    const buckets = Array.from({ length: bucketCount }, (_, i) => ({
+      label: formatShortDate(new Date(startMs + i * bucketMs).toISOString().slice(0, 10)),
+      value: 0,
+    }));
+    for (const p of earnedPayments) {
+      const t = Date.parse(`${p.payment_date}T00:00:00`);
+      if (Number.isNaN(t)) continue;
+      const idx = Math.min(bucketCount - 1, Math.floor((t - startMs) / bucketMs));
+      buckets[idx].value += p.amount_cents;
+    }
+    return buckets;
+  }, [earnedPayments, fromDate, toDate]);
 
   const exportEarnedRevenue = () => {
     const rows = earnedPayments.map((p) => {
@@ -166,6 +189,17 @@ export const ReportsPage: React.FC = () => {
             </div>
           </div>
 
+          {revenueTrend.length > 0 && revenueTrend.some((b) => b.value > 0) && (
+            <FadeIn>
+              <AreaChart
+                data={revenueTrend}
+                height={160}
+                color="#1D4ED8"
+                formatValue={(n) => formatCents(Math.round(n), currency)}
+              />
+            </FadeIn>
+          )}
+
           {earnedPayments.length === 0 ? (
             <p className="text-xs text-[#3B5998]">No valid payments recorded in this date window.</p>
           ) : (
@@ -203,14 +237,29 @@ export const ReportsPage: React.FC = () => {
           {activityByType.length === 0 ? (
             <p className="text-xs text-[#3B5998]">No activities in selected date range.</p>
           ) : (
-            <div className="space-y-2.5">
-              {activityByType.map(([type, cnt]) => (
+            <>
+              <FadeIn>
+                <DonutChart
+                  data={activityByType.map(([label, value], i) => ({
+                    label,
+                    value,
+                    color: CHART_COLORS[i % CHART_COLORS.length],
+                  }))}
+                  size={140}
+                  thickness={18}
+                  centerLabel="Activities"
+                  centerValue={String(activityByType.reduce((s, [, c]) => s + c, 0))}
+                />
+              </FadeIn>
+              <div className="space-y-2.5 pt-2">
+                {activityByType.map(([type, cnt]) => (
                 <div key={type} className="flex items-center justify-between py-2 border-b border-[#EFF6FF] last:border-0">
                   <StatusIndicator status={type} />
                   <span className="font-semibold text-[#0A1936] tabular-nums">{cnt}</span>
                 </div>
               ))}
-            </div>
+              </div>
+            </>
           )}
         </Card>
       </div>

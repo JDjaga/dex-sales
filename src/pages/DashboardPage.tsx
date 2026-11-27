@@ -24,6 +24,8 @@ import { addDaysIso, formatCents, formatShortDate, todayIso } from '../lib/forma
 import { useCrm } from '../store/crmStore';
 import { isReadOnlyRole } from '../store/policy';
 import type { ActionType } from '../types/crm';
+import { AreaChart, AnimatedBar, CHART_COLORS, DonutChart } from '../components/charts';
+import { CountUp, FadeIn, StaggerContainer, StaggerItem } from '../components/motion';
 
 export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onNavigate }) => {
   const {
@@ -130,6 +132,42 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
     }
     return Object.entries(counts);
   }, [visibleLeads]);
+
+  // Revenue trend: equal time buckets across the selected window
+  const revenueTrend = useMemo(() => {
+    const bucketCount = 6;
+    const windowStart = addDaysIso(today, -windowDays);
+    const bucketDays = windowDays / bucketCount;
+    const buckets = Array.from({ length: bucketCount }, (_, i) => ({
+      label: formatShortDate(addDaysIso(windowStart, Math.round(i * bucketDays))),
+      value: 0,
+    }));
+    const startMs = Date.parse(`${windowStart}T00:00:00`);
+    for (const p of visiblePayments) {
+      if (p.status !== 'Valid') continue;
+      const t = Date.parse(`${p.payment_date}T00:00:00`);
+      if (Number.isNaN(t) || t < startMs) continue;
+      const idx = Math.min(bucketCount - 1, Math.floor((t - startMs) / (bucketDays * 86400000)));
+      buckets[idx].value += p.amount_cents;
+    }
+    return buckets;
+  }, [visiblePayments, windowDays, today]);
+
+  // Open pipeline value grouped by stage
+  const pipelineByStage = useMemo(() => {
+    const order = ['Discovery', 'Proposal', 'Negotiation'];
+    const map = new Map<string, { value: number; count: number }>();
+    for (const o of activeOpps) {
+      const cur = map.get(o.stage) || { value: 0, count: 0 };
+      cur.value += o.estimated_value_cents;
+      cur.count += 1;
+      map.set(o.stage, cur);
+    }
+    return order
+      .filter((s) => map.has(s))
+      .map((s) => ({ stage: s, ...(map.get(s) as { value: number; count: number }) }));
+  }, [activeOpps]);
+  const maxPipelineValue = Math.max(1, ...pipelineByStage.map((p) => p.value));
 
   // Rule-based explainable suggestions strictly within permitted visibility
   const suggestions = useMemo(() => {
@@ -243,11 +281,14 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
       {toast && <SuccessBanner message={toast} onClose={() => setToast('')} />}
 
       {/* KPI Summary Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <StaggerItem>
         <Card className="p-5">
           <div className="text-xs font-medium text-[#3B5998]">My Open Leads &amp; Actions</div>
           <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-2xl font-semibold text-[#0A1936] tabular-nums">{myOpenLeads.length}</span>
+            <span className="text-2xl font-semibold text-[#0A1936] tabular-nums">
+              <CountUp value={myOpenLeads.length} />
+            </span>
             <span className="text-xs text-[#1D4ED8] tabular-nums">
               {overdueActions.length} overdue · {dueTodayActions.length} today
             </span>
@@ -260,12 +301,14 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
             <ArrowRight className="w-3 h-3" />
           </button>
         </Card>
+        </StaggerItem>
 
+        <StaggerItem>
         <Card className="p-5">
           <div className="text-xs font-medium text-[#3B5998]">Weighted Pipeline</div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold text-[#0A1936] tabular-nums">
-              {formatCents(weightedPipelineCents, currency)}
+              <CountUp value={weightedPipelineCents} format={(n) => formatCents(Math.round(n), currency)} />
             </span>
             <span className="text-xs text-[#3B5998] tabular-nums">{activeOpps.length} open deals</span>
           </div>
@@ -277,12 +320,14 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
             <ArrowRight className="w-3 h-3" />
           </button>
         </Card>
+        </StaggerItem>
 
+        <StaggerItem>
         <Card className="p-5">
           <div className="text-xs font-medium text-[#3B5998]">Outstanding Invoices</div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold text-[#0A1936] tabular-nums">
-              {formatCents(outstandingCents, currency)}
+              <CountUp value={outstandingCents} format={(n) => formatCents(Math.round(n), currency)} />
             </span>
             <span className="text-xs text-[#0F295C] tabular-nums">
               {overdueInvoices.length > 0 ? `${formatCents(overdueCents, currency)} overdue` : 'None overdue'}
@@ -296,12 +341,14 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
             <ArrowRight className="w-3 h-3" />
           </button>
         </Card>
+        </StaggerItem>
 
+        <StaggerItem>
         <Card className="p-5">
           <div className="text-xs font-medium text-[#3B5998]">Earned Revenue ({windowDays}d)</div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold text-[#1D4ED8] tabular-nums">
-              {formatCents(earnedRevenueCents, currency)}
+              <CountUp value={earnedRevenueCents} format={(n) => formatCents(Math.round(n), currency)} />
             </span>
             <span className="text-xs text-[#3B5998]">Valid payments</span>
           </div>
@@ -313,7 +360,8 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
             <ArrowRight className="w-3 h-3" />
           </button>
         </Card>
-      </div>
+        </StaggerItem>
+      </StaggerContainer>
 
       {/* Explainable Suggestions */}
       {suggestions.length > 0 && (
@@ -496,16 +544,17 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
             <p className="text-xs text-[#3B5998]">No leads in your permitted scope.</p>
           ) : (
             <div className="space-y-3">
-              {leadsByStage.map(([stage, count]) => (
+              {leadsByStage.map(([stage, count], idx) => (
                 <div key={stage}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="font-medium text-[#0F295C]">{stage}</span>
                     <span className="text-[#1D4ED8] font-semibold tabular-nums">{count}</span>
                   </div>
                   <div className="h-2 rounded-full bg-[#EFF6FF] overflow-hidden">
-                    <div
-                      className="h-full bg-[#1D4ED8] rounded-full"
-                      style={{ width: `${Math.round((count / maxStageCount) * 100)}%` }}
+                    <AnimatedBar
+                      pct={(count / maxStageCount) * 100}
+                      delay={idx * 0.08}
+                      className={idx % 2 === 0 ? 'bg-[#1D4ED8]' : 'bg-[#93C5FD]'}
                     />
                   </div>
                 </div>
@@ -519,18 +568,90 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
           {leadsBySource.length === 0 ? (
             <p className="text-xs text-[#3B5998]">No leads in your permitted scope.</p>
           ) : (
-            <div className="space-y-3">
-              {leadsBySource.map(([source, count]) => (
-                <div key={source} className="flex items-center justify-between py-1.5 border-b border-[#EFF6FF] last:border-0">
-                  <span className="text-sm text-[#0F295C]">{source}</span>
-                  <span className="px-2.5 py-0.5 rounded-md bg-[#EFF6FF] text-xs font-semibold text-[#1D4ED8] tabular-nums">
-                    {count}
-                  </span>
-                </div>
-              ))}
-            </div>
+            <DonutChart
+              data={leadsBySource.map(([label, value], i) => ({
+                label,
+                value,
+                color: CHART_COLORS[i % CHART_COLORS.length],
+              }))}
+              size={150}
+              thickness={20}
+              centerLabel="Leads"
+              centerValue={String(visibleLeads.length)}
+            />
           )}
         </Card>
+      </div>
+
+      {/* Charts Row: Revenue Trend & Open Pipeline by Stage */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <FadeIn className="lg:col-span-7">
+          <Card className="p-5 h-full">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-base font-semibold text-[#0A1936]">Revenue Trend</h2>
+                <p className="text-xs text-[#3B5998] mt-0.5">
+                  Valid payments across the last {windowDays} days
+                </p>
+              </div>
+              <span className="text-sm font-semibold text-[#1D4ED8] tabular-nums">
+                {formatCents(earnedRevenueCents, currency)}
+              </span>
+            </div>
+            {revenueTrend.every((b) => b.value === 0) ? (
+              <p className="text-xs text-[#3B5998] py-8 text-center">
+                No valid payments recorded in this window.
+              </p>
+            ) : (
+              <AreaChart
+                data={revenueTrend}
+                height={200}
+                color="#1D4ED8"
+                formatValue={(n) => formatCents(Math.round(n), currency)}
+              />
+            )}
+          </Card>
+        </FadeIn>
+
+        <FadeIn delay={0.1} className="lg:col-span-5">
+          <Card className="p-5 h-full">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-base font-semibold text-[#0A1936]">Open Pipeline by Stage</h2>
+                <p className="text-xs text-[#3B5998] mt-0.5">Estimated deal value in active stages</p>
+              </div>
+              <span className="text-sm font-semibold text-[#1D4ED8] tabular-nums">
+                {activeOpps.length} deals
+              </span>
+            </div>
+            {pipelineByStage.length === 0 ? (
+              <p className="text-xs text-[#3B5998] py-8 text-center">No open opportunities in scope.</p>
+            ) : (
+              <div className="space-y-4">
+                {pipelineByStage.map((p, idx) => (
+                  <div key={p.stage}>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="font-medium text-[#0F295C]">
+                        {p.stage}
+                        <span className="text-[#3B5998] font-normal"> · {p.count} deal{p.count === 1 ? '' : 's'}</span>
+                      </span>
+                      <span className="text-[#1D4ED8] font-semibold tabular-nums">
+                        {formatCents(p.value, currency)}
+                      </span>
+                    </div>
+                    <div className="h-2.5 rounded-full bg-[#EFF6FF] overflow-hidden">
+                      <AnimatedBar
+                        pct={(p.value / maxPipelineValue) * 100}
+                        delay={0.2 + idx * 0.1}
+                        className={idx === 0 ? 'bg-[#0F295C]' : idx === 1 ? 'bg-[#1D4ED8]' : 'bg-[#93C5FD]'}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        </FadeIn>
       </div>
 
       {/* Complete Action Modal */}
