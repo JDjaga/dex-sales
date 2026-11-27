@@ -21,7 +21,7 @@ export const Button: React.FC<
   }
 > = ({ variant = 'primary', size = 'md', className = '', children, ...rest }) => {
   const base =
-    'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-colors whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D4ED8] focus-visible:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+    'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-150 active:scale-[0.97] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1D4ED8] focus-visible:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
   const sizing = size === 'sm' ? 'px-3 py-1.5 text-xs min-h-[34px]' : 'px-4 py-2 text-sm min-h-[40px]';
   const variants = {
     primary: 'bg-[#1D4ED8] text-white hover:bg-[#1E40AF]',
@@ -36,11 +36,20 @@ export const Button: React.FC<
   );
 };
 
-export const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({
+export const Card: React.FC<{ children: React.ReactNode; className?: string; hoverable?: boolean }> = ({
   children,
   className = '',
+  hoverable = true,
 }) => (
-  <div className={`bg-white border border-[#DBEAFE] rounded-xl ${className}`}>{children}</div>
+  <div
+    className={`bg-white border border-[#DBEAFE] rounded-xl transition-all duration-200 ${
+      hoverable
+        ? 'hover:border-[#93C5FD] hover:shadow-[0_8px_24px_-8px_rgba(29,78,216,0.18)] hover:-translate-y-0.5'
+        : ''
+    } ${className}`}
+  >
+    {children}
+  </div>
 );
 
 export const PageHeader: React.FC<{
@@ -177,11 +186,11 @@ export const Modal: React.FC<{
 }> = ({ open, onClose, title, subtitle, children, maxWidth = 'max-w-xl' }) => {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A1936]/40 backdrop-blur-[1px] overflow-y-auto no-print">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0A1936]/40 backdrop-blur-[1px] overflow-y-auto no-print animate-fade-in">
       <div
         role="dialog"
         aria-modal="true"
-        className={`w-full ${maxWidth} bg-white border border-[#BFDBFE] rounded-xl shadow-lg my-8 max-h-[90vh] flex flex-col`}
+        className={`w-full ${maxWidth} bg-white border border-[#BFDBFE] rounded-xl shadow-lg my-8 max-h-[90vh] flex flex-col animate-fade-up`}
       >
         <div className="flex items-start justify-between gap-4 px-6 py-4 border-b border-[#DBEAFE]">
           <div>

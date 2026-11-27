@@ -268,7 +268,7 @@ export const Layout: React.FC<LayoutProps> = ({ route, onNavigate, children }) =
               )}
 
               {searchQuery.trim().length > 0 && (
-                <div className="absolute left-0 right-0 mt-1.5 bg-white border border-[#BFDBFE] rounded-xl shadow-lg z-40 overflow-hidden">
+                <div className="absolute left-0 right-0 mt-1.5 bg-white border border-[#BFDBFE] rounded-xl shadow-lg z-40 overflow-hidden animate-pop-in">
                   {searchResults.length === 0 ? (
                     <div className="px-4 py-3 text-xs text-[#3B5998]">
                       No permitted records matching &ldquo;{searchQuery}&rdquo;.
@@ -321,7 +321,7 @@ export const Layout: React.FC<LayoutProps> = ({ route, onNavigate, children }) =
               </button>
 
               {notifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-[#BFDBFE] rounded-xl shadow-lg z-40 overflow-hidden">
+                <div className="absolute right-0 mt-2 w-80 bg-white border border-[#BFDBFE] rounded-xl shadow-lg z-40 overflow-hidden animate-pop-in">
                   <div className="px-4 py-3 border-b border-[#DBEAFE] flex items-center justify-between">
                     <span className="text-xs font-semibold text-[#0F295C]">Notifications</span>
                     {unreadCount > 0 && (
@@ -386,7 +386,7 @@ export const Layout: React.FC<LayoutProps> = ({ route, onNavigate, children }) =
                 </button>
 
                 {roleMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-72 bg-white border border-[#BFDBFE] rounded-xl shadow-lg z-40 overflow-hidden">
+                  <div className="absolute right-0 mt-2 w-72 bg-white border border-[#BFDBFE] rounded-xl shadow-lg z-40 overflow-hidden animate-pop-in">
                     <div className="px-4 py-2.5 bg-[#F4F8FF] border-b border-[#DBEAFE]">
                       <div className="text-xs font-semibold text-[#0F295C]">Switch Demo Role / User</div>
                       <div className="text-[11px] text-[#3B5998]">
