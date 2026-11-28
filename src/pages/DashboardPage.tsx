@@ -13,6 +13,7 @@ import {
   EmptyState,
   ErrorAlert,
   Field,
+  InfoBanner,
   Modal,
   PageHeader,
   StatusIndicator,
@@ -51,6 +52,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
   const [followUpDue, setFollowUpDue] = useState(addDaysIso(todayIso(), 3));
   const [actionError, setActionError] = useState('');
   const [toast, setToast] = useState('');
+  const [showGuide, setShowGuide] = useState(true);
 
   const today = todayIso();
   const windowCutoff = addDaysIso(today, -windowDays);
@@ -251,8 +253,8 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Institutional Deal Desk"
-        subtitle={`Permitted overview for ${currentUser?.name} (${currentUser?.role})`}
+        title="Dashboard"
+        subtitle={`Hi ${currentUser?.name?.split(' ')[0] || 'there'} — here's what's happening with your sales today`}
         actions={
           <div className="flex items-center gap-2">
             <div className="inline-flex rounded-lg border border-[#BFDBFE] bg-[#F4F8FF] p-0.5">
@@ -280,17 +282,25 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
 
       {toast && <SuccessBanner message={toast} onClose={() => setToast('')} />}
 
+      {showGuide && (
+        <InfoBanner
+          title="New here? Here's how deals flow"
+          body="Enquiry → Lead → Organization & Contacts → Opportunity → Quote → Order → Invoice. Everything is connected, so a customer's full history stays in one place. Use the left menu to jump to any section."
+          onClose={() => setShowGuide(false)}
+        />
+      )}
+
       {/* KPI Summary Strip */}
       <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StaggerItem>
         <Card className="p-5">
-          <div className="text-xs font-medium text-[#3B5998]">My Open Leads &amp; Actions</div>
+          <div className="text-xs font-medium text-[#3B5998]">My Open Leads &amp; Follow-ups</div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold text-[#0A1936] tabular-nums">
               <CountUp value={myOpenLeads.length} />
             </span>
             <span className="text-xs text-[#1D4ED8] tabular-nums">
-              {overdueActions.length} overdue · {dueTodayActions.length} today
+              {overdueActions.length} overdue · {dueTodayActions.length} due today
             </span>
           </div>
           <button
@@ -305,7 +315,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
 
         <StaggerItem>
         <Card className="p-5">
-          <div className="text-xs font-medium text-[#3B5998]">Weighted Pipeline</div>
+          <div className="text-xs font-medium text-[#3B5998]">Expected Revenue</div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold text-[#0A1936] tabular-nums">
               <CountUp value={weightedPipelineCents} format={(n) => formatCents(Math.round(n), currency)} />
@@ -324,7 +334,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
 
         <StaggerItem>
         <Card className="p-5">
-          <div className="text-xs font-medium text-[#3B5998]">Outstanding Invoices</div>
+          <div className="text-xs font-medium text-[#3B5998]">Unpaid Invoices</div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold text-[#0A1936] tabular-nums">
               <CountUp value={outstandingCents} format={(n) => formatCents(Math.round(n), currency)} />
@@ -345,7 +355,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
 
         <StaggerItem>
         <Card className="p-5">
-          <div className="text-xs font-medium text-[#3B5998]">Earned Revenue ({windowDays}d)</div>
+          <div className="text-xs font-medium text-[#3B5998]">Money Received ({windowDays}d)</div>
           <div className="mt-2 flex items-baseline justify-between">
             <span className="text-2xl font-semibold text-[#1D4ED8] tabular-nums">
               <CountUp value={earnedRevenueCents} format={(n) => formatCents(Math.round(n), currency)} />
@@ -368,7 +378,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
         <Card className="p-5">
           <div className="flex items-center gap-2 mb-3">
             <Lightbulb className="w-4 h-4 text-[#1D4ED8]" />
-            <h2 className="text-sm font-semibold text-[#0A1936]">Rule-Based Next Step Suggestions</h2>
+            <h2 className="text-sm font-semibold text-[#0A1936]">Suggested Next Steps</h2>
           </div>
           <div className="divide-y divide-[#EFF6FF]">
             {suggestions.map((s) => (
@@ -411,7 +421,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
         {/* Actions */}
         <Card className="lg:col-span-7 p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-[#0A1936]">Priority Action Queue</h2>
+            <h2 className="text-base font-semibold text-[#0A1936]">To-Do &amp; Follow-ups</h2>
             <button
               onClick={() => onNavigate({ page: 'actions' })}
               className="text-xs font-medium text-[#1D4ED8] hover:underline cursor-pointer"
@@ -421,8 +431,8 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
           </div>
           {openActions.length === 0 ? (
             <EmptyState
-              title="No open actions"
-              description="All scheduled actions in your visibility scope are complete."
+              title="All caught up"
+              description="All your scheduled follow-ups are done. Nice work!"
             />
           ) : (
             <div className="divide-y divide-[#EFF6FF]">
@@ -473,7 +483,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
         <Card className="lg:col-span-5 p-5 space-y-5">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-[#0A1936]">Quotes Awaiting Decision</h2>
+              <h2 className="text-base font-semibold text-[#0A1936]">Quotes Waiting for Customer</h2>
               <span className="text-xs font-medium text-[#1D4ED8] tabular-nums">{awaitingQuotes.length}</span>
             </div>
             {awaitingQuotes.length === 0 ? (
@@ -506,7 +516,7 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
 
           <div className="pt-4 border-t border-[#DBEAFE]">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-[#0A1936]">Orders Awaiting Invoice</h2>
+              <h2 className="text-base font-semibold text-[#0A1936]">Orders Needing an Invoice</h2>
               <span className="text-xs font-medium text-[#1D4ED8] tabular-nums">{ordersAwaitingInvoice.length}</span>
             </div>
             {ordersAwaitingInvoice.length === 0 ? (
@@ -589,9 +599,9 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
           <Card className="p-5 h-full">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-base font-semibold text-[#0A1936]">Revenue Trend</h2>
+                <h2 className="text-base font-semibold text-[#0A1936]">Money Received Over Time</h2>
                 <p className="text-xs text-[#3B5998] mt-0.5">
-                  Valid payments across the last {windowDays} days
+                  Payments collected in the last {windowDays} days
                 </p>
               </div>
               <span className="text-sm font-semibold text-[#1D4ED8] tabular-nums">
@@ -617,8 +627,8 @@ export const DashboardPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
           <Card className="p-5 h-full">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-base font-semibold text-[#0A1936]">Open Pipeline by Stage</h2>
-                <p className="text-xs text-[#3B5998] mt-0.5">Estimated deal value in active stages</p>
+                <h2 className="text-base font-semibold text-[#0A1936]">Deals by Stage</h2>
+                <p className="text-xs text-[#3B5998] mt-0.5">Total value of open deals in each stage</p>
               </div>
               <span className="text-sm font-semibold text-[#1D4ED8] tabular-nums">
                 {activeOpps.length} deals

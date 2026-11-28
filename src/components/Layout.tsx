@@ -115,7 +115,7 @@ export const Layout: React.FC<LayoutProps> = ({ route, onNavigate, children }) =
       heading: 'Workspace',
       items: [
         { label: 'Dashboard', icon: LayoutDashboard, active: route.page === 'dashboard', nav: { page: 'dashboard' } as NavRoute },
-        { label: 'Actions & Calendar', icon: CalendarClock, active: route.page === 'actions', nav: { page: 'actions' } as NavRoute },
+        { label: 'Follow-ups & Calendar', icon: CalendarClock, active: route.page === 'actions', nav: { page: 'actions' } as NavRoute },
       ],
     },
     {
@@ -138,7 +138,7 @@ export const Layout: React.FC<LayoutProps> = ({ route, onNavigate, children }) =
     {
       heading: 'Reporting & Admin',
       items: [
-        { label: 'Reports & CSV', icon: BarChart3, active: route.page === 'reports', nav: { page: 'reports' } as NavRoute },
+        { label: 'Reports & Exports', icon: BarChart3, active: route.page === 'reports', nav: { page: 'reports' } as NavRoute },
         ...(canAccessEnquiries(currentUser, state.settings)
           ? [{ label: 'Enquiry Queue', icon: Inbox, active: route.page === 'enquiries', nav: { page: 'enquiries' } as NavRoute }]
           : []),

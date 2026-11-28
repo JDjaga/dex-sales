@@ -63,7 +63,7 @@ export const ContactDetailPage: React.FC<{ contactId: string; onNavigate: (r: Na
     return (
       <EmptyState
         title="Contact not accessible"
-        description="This contact does not exist or is outside your current visibility scope."
+        description="This contact doesn't exist, or you don't have access to it."
         action={<Button onClick={() => onNavigate({ page: 'contacts' })}>Back to Contacts</Button>}
       />
     );
@@ -192,7 +192,7 @@ export const ContactDetailPage: React.FC<{ contactId: string; onNavigate: (r: Na
               <dd className="text-[#0F295C]">{contact.how_known || '—'}</dd>
             </div>
             <div>
-              <dt className="text-xs text-[#3B5998]">Consent Basis &amp; Timestamp</dt>
+              <dt className="text-xs text-[#3B5998]">Permission to Contact</dt>
               <dd className="text-[#0F295C]">
                 {contact.consent_basis || 'Not recorded'}
                 {contact.consent_timestamp ? ` (${formatDateTime(contact.consent_timestamp)})` : ''}
@@ -205,12 +205,12 @@ export const ContactDetailPage: React.FC<{ contactId: string; onNavigate: (r: Na
           <Card className="p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold text-[#0A1936]">
-                Organization Memberships ({activeMemberships.length} / 20)
+                Linked Companies ({activeMemberships.length})
               </h2>
             </div>
 
             {activeMemberships.length === 0 ? (
-              <p className="text-xs text-[#3B5998]">Not currently assigned to any organization.</p>
+              <p className="text-xs text-[#3B5998]">Not linked to any company yet.</p>
             ) : (
               <div className="divide-y divide-[#EFF6FF]">
                 {activeMemberships.map((m) => {

@@ -140,7 +140,7 @@ export const EnquiriesPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
     <div className="space-y-6">
       <PageHeader
         title="Website Enquiry Queue"
-        subtitle="Review incoming institutional requests before creating Organizations, Contacts, and Leads"
+        subtitle="New requests waiting for review before they become leads"
         actions={
           <Button onClick={() => setSubmitOpen(true)}>
             <Plus className="w-4 h-4" />
@@ -289,7 +289,7 @@ export const EnquiriesPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
         open={submitOpen}
         onClose={() => setSubmitOpen(false)}
         title="Submit Test Website Enquiry"
-        subtitle="Simulates an institutional intake form submission into the Manager approval queue"
+        subtitle="Send a test enquiry — like a customer would from the website"
       >
         <form onSubmit={handleCreateEnquiry} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -401,7 +401,7 @@ export const EnquiriesPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
         open={Boolean(approveTargetId)}
         onClose={() => setApproveTargetId(null)}
         title="Approve Website Enquiry"
-        subtitle="Creates the Organization, Contact, Active Membership, Lead, and Initial Next Action"
+        subtitle="This creates the company, contact, lead and first follow-up task"
       >
         <form onSubmit={handleApprove} className="space-y-4">
           <Field label="Review Note (optional)">
@@ -427,7 +427,7 @@ export const EnquiriesPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({
         open={Boolean(dismissTargetId)}
         onClose={() => setDismissTargetId(null)}
         title="Dismiss Website Enquiry"
-        subtitle="Record why this enquiry will not be converted into a CRM lead"
+        subtitle="Tell us why this enquiry won't become a lead"
       >
         <form onSubmit={handleDismiss} className="space-y-4">
           <Field label="Dismissal Reason" required>

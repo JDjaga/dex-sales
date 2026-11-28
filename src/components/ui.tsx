@@ -144,10 +144,11 @@ export const SuccessBanner: React.FC<{ message: string; onClose?: () => void }> 
   );
 };
 
-export const InfoBanner: React.FC<{ title: string; body: string; action?: React.ReactNode }> = ({
+export const InfoBanner: React.FC<{ title: string; body: string; action?: React.ReactNode; onClose?: () => void }> = ({
   title,
   body,
   action,
+  onClose,
 }) => (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-lg bg-[#F4F8FF] border border-[#BFDBFE] text-sm">
     <div className="flex items-start gap-2.5">
@@ -157,7 +158,18 @@ export const InfoBanner: React.FC<{ title: string; body: string; action?: React.
         <div className="text-[#3B5998] text-xs mt-0.5">{body}</div>
       </div>
     </div>
-    {action && <div className="shrink-0">{action}</div>}
+    <div className="flex items-center gap-2 shrink-0">
+      {action}
+      {onClose && (
+        <button
+          onClick={onClose}
+          aria-label="Dismiss"
+          className="p-1 rounded-md text-[#3B5998] hover:bg-white hover:text-[#0F295C]"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
+    </div>
   </div>
 );
 

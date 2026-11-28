@@ -109,7 +109,7 @@ export const LeadDetailPage: React.FC<{ leadId: string; onNavigate: (r: NavRoute
     return (
       <EmptyState
         title="Lead not accessible"
-        description="This lead does not exist or is outside your current visibility scope."
+        description="This lead doesn't exist, or you don't have access to it."
         action={<Button onClick={() => onNavigate({ page: 'leads' })}>Back to Leads</Button>}
       />
     );

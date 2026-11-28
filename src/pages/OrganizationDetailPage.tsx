@@ -118,7 +118,7 @@ export const OrganizationDetailPage: React.FC<{
     return (
       <EmptyState
         title="Organization not accessible"
-        description="This organization either does not exist or is outside your current role's visibility scope."
+        description="This company doesn't exist, or you don't have access to it."
         action={<Button onClick={() => onNavigate({ page: 'organizations' })}>Back to Organizations</Button>}
       />
     );
@@ -249,7 +249,7 @@ export const OrganizationDetailPage: React.FC<{
                 tab === 'brief' ? 'bg-[#1D4ED8] text-white' : 'text-[#0F295C]'
               }`}
             >
-              Institutional Engagement Brief
+              Engagement Summary
             </button>
           </div>
 
@@ -291,10 +291,10 @@ export const OrganizationDetailPage: React.FC<{
             <div>
               <BrandLogo size="sm" className="mb-3" />
               <h2 className="text-xl font-semibold text-[#0A1936]">
-                Institutional Engagement Brief: {org.name}
+                Engagement Summary — {org.name}
               </h2>
               <p className="text-xs text-[#3B5998] mt-1">
-                Compiled exclusively from recorded CRM data · Generated {formatDateTime(new Date().toISOString())}
+                Built from your recorded data · Generated {formatDateTime(new Date().toISOString())}
               </p>
             </div>
             <div className="text-left sm:text-right text-xs text-[#3B5998] space-y-1">
@@ -302,11 +302,11 @@ export const OrganizationDetailPage: React.FC<{
                 <span className="font-semibold text-[#0F295C]">Account Status:</span> {org.account_status}
               </div>
               <div>
-                <span className="font-semibold text-[#0F295C]">Relationship Owner:</span>{' '}
+                <span className="font-semibold text-[#0F295C]">Owner:</span>{' '}
                 {owner ? `${owner.name} (${owner.role})` : 'Missing information'}
               </div>
               <div>
-                <span className="font-semibold text-[#0F295C]">Jurisdiction:</span>{' '}
+                <span className="font-semibold text-[#0F295C]">Location:</span>{' '}
                 {org.city_region ? `${org.city_region}, ` : ''}{org.country}
               </div>
             </div>
@@ -315,23 +315,23 @@ export const OrganizationDetailPage: React.FC<{
           {/* 1. Organization Profile */}
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-[#0F295C] bg-[#EFF6FF] px-3 py-1.5 rounded-md">
-              1. Organization Profile &amp; Relationship Owner
+              1. Company Profile &amp; Owner
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm pt-1">
               <div>
-                <span className="text-xs text-[#3B5998] block">Legal Entity Name</span>
+                <span className="text-xs text-[#3B5998] block">Legal Name</span>
                 <span className="font-medium text-[#0A1936]">
                   {org.legal_name || <em className="text-[#3B5998]">Missing information</em>}
                 </span>
               </div>
               <div>
-                <span className="text-xs text-[#3B5998] block">Institution Type &amp; Industry</span>
+                <span className="text-xs text-[#3B5998] block">Type &amp; Industry</span>
                 <span className="font-medium text-[#0A1936]">
                   {org.org_type}{org.industry ? ` · ${org.industry}` : ''}
                 </span>
               </div>
               <div>
-                <span className="text-xs text-[#3B5998] block">Website &amp; Primary Contact Channel</span>
+                <span className="text-xs text-[#3B5998] block">Website / Email</span>
                 <span className="font-medium text-[#0A1936]">
                   {org.website || org.main_email || <em className="text-[#3B5998]">Not recorded</em>}
                 </span>
@@ -343,11 +343,11 @@ export const OrganizationDetailPage: React.FC<{
           {/* 2. People Involved */}
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-[#0F295C] bg-[#EFF6FF] px-3 py-1.5 rounded-md">
-              2. People Involved &amp; Recorded Designations
+              2. People We Deal With
             </h3>
             {people.length === 0 ? (
               <p className="text-sm text-[#3B5998] italic">
-                Missing information: No active stakeholder contacts are linked to this organization.
+                No contacts are linked to this company yet.
               </p>
             ) : (
               <div className="divide-y divide-[#EFF6FF]">
@@ -379,7 +379,7 @@ export const OrganizationDetailPage: React.FC<{
           {/* 3. Active Leads & Opportunities */}
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-[#0F295C] bg-[#EFF6FF] px-3 py-1.5 rounded-md">
-              3. Active Leads &amp; Commercial Opportunities
+              3. Leads &amp; Deals
             </h3>
             {orgLeads.length === 0 && orgOpps.length === 0 ? (
               <p className="text-sm text-[#3B5998] italic">No leads or opportunities recorded for this organization.</p>
@@ -425,7 +425,7 @@ export const OrganizationDetailPage: React.FC<{
           {/* 4. Recent Interactions & Decisions */}
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-[#0F295C] bg-[#EFF6FF] px-3 py-1.5 rounded-md">
-              4. Recent Recorded Interactions &amp; Commercial Milestones
+              4. Recent Activity &amp; Documents
             </h3>
             {orgActivities.length === 0 && orgQuotes.length === 0 && orgInvoices.length === 0 ? (
               <p className="text-sm text-[#3B5998] italic">No recorded interactions or commercial documents yet.</p>
@@ -476,10 +476,10 @@ export const OrganizationDetailPage: React.FC<{
           {/* 5. Current Blockers & Missing Information */}
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-[#0F295C] bg-[#EFF6FF] px-3 py-1.5 rounded-md">
-              5. Current Blockers &amp; Missing Information
+              5. What's Missing or Blocking
             </h3>
             {blockersAndGaps.length === 0 ? (
-              <p className="text-sm text-[#3B5998]">No blockers or missing required fields detected in recorded CRM data.</p>
+              <p className="text-sm text-[#3B5998]">Nothing is missing or blocking right now.</p>
             ) : (
               <ul className="space-y-1.5 text-sm">
                 {blockersAndGaps.map((g, idx) => (
@@ -505,11 +505,11 @@ export const OrganizationDetailPage: React.FC<{
           {/* 6. Next Action, Owner & Due Date */}
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-[#0F295C] bg-[#EFF6FF] px-3 py-1.5 rounded-md">
-              6. Next Action, Owner &amp; Due Date
+              6. Next Step, Owner &amp; Due Date
             </h3>
             {openNextActions.length === 0 ? (
               <p className="text-sm text-[#3B5998] italic">
-                Missing information: No open next action is currently scheduled for this organization.
+                No follow-up is scheduled for this company yet.
               </p>
             ) : (
               <div className="space-y-2">
@@ -587,7 +587,7 @@ export const OrganizationDetailPage: React.FC<{
             {/* Stakeholders */}
             <Card className="p-5 space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-semibold text-[#0A1936]">People &amp; Designations</h2>
+                <h2 className="text-base font-semibold text-[#0A1936]">People &amp; Roles</h2>
                 <Button size="sm" variant="outline" onClick={() => onNavigate({ page: 'contacts' })}>
                   <UserPlus className="w-3.5 h-3.5" />
                   Manage

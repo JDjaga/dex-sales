@@ -62,7 +62,7 @@ export const OpportunityDetailPage: React.FC<{ oppId: string; onNavigate: (r: Na
     return (
       <EmptyState
         title="Opportunity not accessible"
-        description="This opportunity does not exist or is outside your current visibility scope."
+        description="This deal doesn't exist, or you don't have access to it."
         action={<Button onClick={() => onNavigate({ page: 'opportunities' })}>Back to Opportunities</Button>}
       />
     );

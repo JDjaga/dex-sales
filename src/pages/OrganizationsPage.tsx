@@ -145,7 +145,7 @@ export const OrganizationsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> 
     <div className="space-y-6">
       <PageHeader
         title="Organizations"
-        subtitle="Institutional accounts, regulators, banks, universities, and partners"
+        subtitle="All the companies and institutions you sell to"
         actions={
           <div className="flex flex-wrap items-center gap-2">
             {currentUser && isManagerPlus(currentUser.role) && visibleOrganizations.length >= 2 && (
@@ -211,7 +211,7 @@ export const OrganizationsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> 
       {filtered.length === 0 ? (
         <EmptyState
           title="No organizations found"
-          description="No institutional organizations match your current search and visibility scope."
+          description="No organizations match your search — or you don't have access to them."
           action={
             currentUser && !isReadOnlyRole(currentUser.role) ? (
               <Button onClick={() => setCreateOpen(true)}>
@@ -286,7 +286,7 @@ export const OrganizationsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> 
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         title="New Organization"
-        subtitle="Similar-name duplicate checking runs automatically within the same country."
+        subtitle="Similar names are flagged automatically so duplicates don't slip in."
       >
         <form
           onSubmit={(e) => {
@@ -439,7 +439,7 @@ export const OrganizationsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> 
         open={mergeOpen}
         onClose={() => setMergeOpen(false)}
         title="Controlled Organization Merge"
-        subtitle="Moves contacts, leads, opportunities, documents, and timelines from source into target."
+        subtitle="Move contacts, leads and deals from one company record into another."
       >
         <form onSubmit={handleMerge} className="space-y-4">
           {mergeError && <ErrorAlert message={mergeError} />}

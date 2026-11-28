@@ -110,8 +110,8 @@ export const ActionsCalendarPage: React.FC<{ onNavigate: (r: NavRoute) => void }
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Actions & Authorized Calendar"
-        subtitle="Prioritized follow-up queue and scheduled calls, meetings, and demos"
+        title="Follow-ups & Calendar"
+        subtitle="Your follow-ups, calls, meetings and demos in one place"
         actions={
           <div className="inline-flex rounded-lg border border-[#BFDBFE] bg-[#F4F8FF] p-0.5">
             <button

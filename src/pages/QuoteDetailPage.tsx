@@ -93,7 +93,7 @@ export const QuoteDetailPage: React.FC<{ quoteId: string; onNavigate: (r: NavRou
     return (
       <EmptyState
         title="Quote not accessible"
-        description="This quote does not exist or is outside your visibility scope."
+        description="This quote doesn't exist, or you don't have access to it."
         action={<Button onClick={() => onNavigate({ page: 'quotes' })}>Back to Quotes</Button>}
       />
     );

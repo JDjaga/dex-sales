@@ -229,11 +229,11 @@ export const AdminPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Admin & Launch Readiness"
+        title="Admin & Settings"
         subtitle={
           orgWide
-            ? 'Manage users, teams, audit logs, workspace defaults, and external integration readiness'
-            : 'Partner Admin console scoped to your partner team'
+            ? 'Manage team members, teams, activity logs and app settings'
+            : 'Settings for your partner team'
         }
       />
 
@@ -242,8 +242,8 @@ export const AdminPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
 
       {isPartnerAdmin && (
         <InfoBanner
-          title="Partner Admin Authority Scope"
-          body="You can view and manage users and activity within your assigned partner team. Organization-wide system settings remain restricted to internal Admin and Super Admin roles."
+          title="Your Partner Team Access"
+          body="You can manage people and activity within your partner team. Company-wide settings are only available to Admin and Super Admin."
         />
       )}
 
@@ -251,7 +251,7 @@ export const AdminPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
         {[
           { id: 'users', label: 'Users & Teams', icon: Users },
           { id: 'audit', label: 'Audit History', icon: Shield },
-          { id: 'settings', label: 'Launch Settings & Readiness', icon: Settings },
+          { id: 'settings', label: 'Settings & Integrations', icon: Settings },
         ].map((item) => {
           const Icon = item.icon;
           const active = tab === item.id;
@@ -596,32 +596,32 @@ export const AdminPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
                 {
                   name: 'Browser-Local Persistence (Demo)',
                   status: 'Active',
-                  detail: 'Saved in browser localStorage (dex_sales_static_demo_v1); survives page refresh in this browser only.',
+                  detail: 'Data is saved in this browser only — it does not sync to other devices or people.',
                 },
                 {
-                  name: 'Printable Engagement Briefs, Quotes & Invoices',
+                  name: 'Printable Summaries, Quotes & Invoices',
                   status: 'Active',
-                  detail: 'Renders clean print-ready PDF views via browser Print / Save as PDF.',
+                  detail: 'Print or save any summary, quote or invoice as a PDF from the browser.',
                 },
                 {
                   name: 'CSV Export & Duplicate-Safe Import',
                   status: 'Active',
-                  detail: 'Exports only authorized visible records with spreadsheet formula escaping.',
+                  detail: 'Download your visible records as a spreadsheet safely.',
                 },
                 {
-                  name: 'Server Database & Real Authentication',
+                  name: 'Server Database & Real Login',
                   status: 'Inactive',
-                  detail: 'Unconfigured. Static demo uses local role switching; production requires server-enforced auth & persistent database.',
+                  detail: 'Not set up. This demo signs in locally and saves data in the browser only.',
                 },
                 {
-                  name: 'Outbound Email / SMTP Delivery',
+                  name: 'Email Sending (SMTP)',
                   status: 'Inactive',
-                  detail: 'Unconfigured. Quote emails, invoice emails, and password reset emails remain disabled.',
+                  detail: 'Not set up. Quote, invoice and password-reset emails are turned off.',
                 },
                 {
-                  name: 'External Calendar & Payment Gateway',
+                  name: 'External Calendar & Online Payments',
                   status: 'Inactive',
-                  detail: 'Unconfigured. Actions calendar stays inside the app; payments are recorded manually by Manager+.',
+                  detail: 'Not set up. Follow-ups stay inside the app and payments are recorded manually.',
                 },
               ].map((item) => (
                 <div key={item.name} className="p-3 rounded-lg bg-[#F4F8FF] border border-[#DBEAFE]">
@@ -641,8 +641,8 @@ export const AdminPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
       <Modal
         open={createUserOpen}
         onClose={() => setCreateUserOpen(false)}
-        title="Add Demo User"
-        subtitle="Create a new user account in local demo storage"
+        title="Add Team Member"
+        subtitle="Create a login for a new team member"
       >
         <form onSubmit={handleCreateUser} className="space-y-4">
           <Field label="Full Name" required>
@@ -777,7 +777,7 @@ export const AdminPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
         open={teamOpen}
         onClose={() => setTeamOpen(false)}
         title="Create Team"
-        subtitle="Teams control shared visibility for BD Users, Managers, and Partner roles"
+        subtitle="Teams decide which records each group of people can see"
       >
         <form onSubmit={handleCreateTeam} className="space-y-4">
           <Field label="Team Name" required>
@@ -820,7 +820,7 @@ export const AdminPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
         open={resetConfirmOpen}
         onClose={() => setResetConfirmOpen(false)}
         title="Reset Demo Workspace?"
-        subtitle="Restores all sample organizations, leads, deals, quotes, invoices, and settings to the initial seed state."
+        subtitle="This wipes all current data and brings back the original sample data."
       >
         <div className="space-y-4">
           <p className="text-sm text-[#3B5998]">

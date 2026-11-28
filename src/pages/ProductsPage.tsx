@@ -68,7 +68,7 @@ export const ProductsPage: React.FC = () => {
         setError(res.error || 'Could not update product.');
         return;
       }
-      setToast(`Updated ${editing.sku}. Existing quotes, orders, and invoices remain locked at their historical snapshot prices.`);
+      setToast(`Updated ${editing.sku}. Old quotes, orders and invoices keep their original prices.`);
     } else {
       const res = createProduct({ sku, name, description: desc, unit, unit_price_cents: cents });
       if (!res.ok) {
@@ -84,7 +84,7 @@ export const ProductsPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Product Catalog"
-        subtitle="Price updates apply to new quotes only; historical quote, order, and invoice snapshots never change."
+        subtitle="Price changes only affect new quotes — old quotes, orders and invoices stay as they were."
         actions={
           canEditProducts ? (
             <Button size="sm" onClick={openCreate}>

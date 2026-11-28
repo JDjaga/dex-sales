@@ -36,7 +36,7 @@ export const OpportunitiesPage: React.FC<{ onNavigate: (r: NavRoute) => void }> 
     <div className="space-y-6">
       <PageHeader
         title="Opportunities & Pipeline"
-        subtitle={`Open weighted pipeline in view: ${formatCents(totalOpenWeighted, currency)} · Created only from Qualified leads`}
+        subtitle={`Open deal value in view: ${formatCents(totalOpenWeighted, currency)} · Deals are created from qualified leads`}
       />
 
       <div className="flex flex-col sm:flex-row gap-3">

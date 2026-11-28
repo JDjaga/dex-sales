@@ -138,7 +138,7 @@ export const LeadsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
     <div className="space-y-6">
       <PageHeader
         title="Leads"
-        subtitle="Track institutional approaches from initial outreach to manager-approved qualification"
+        subtitle="New prospects from first contact to a qualified deal"
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex rounded-lg border border-[#BFDBFE] bg-[#F4F8FF] p-0.5">
@@ -353,7 +353,7 @@ export const LeadsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ onN
       <Modal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        title="New Institutional Lead"
+        title="New Lead"
         subtitle="Defaults: Stage = Prospect, Priority = Medium, Response = Awaiting response, Demo = Not yet offered."
         maxWidth="max-w-2xl"
       >

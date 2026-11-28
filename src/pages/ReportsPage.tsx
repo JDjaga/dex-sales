@@ -149,8 +149,8 @@ export const ReportsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Earned Revenue, Activity Reports & CSV"
-        subtitle="Strict visibility scope applied to all totals, reports, exports, and imports"
+        title="Reports & Exports"
+        subtitle="Money received, team activity, and data export — filtered to what you can see"
       />
 
       {error && <ErrorAlert message={error} onClose={() => setError('')} />}
@@ -181,8 +181,8 @@ export const ReportsPage: React.FC = () => {
         <Card className="lg:col-span-7 p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold text-[#0A1936]">Earned Revenue (Valid Payments by Date)</h2>
-              <p className="text-xs text-[#3B5998]">Unpaid invoices and reversed payments are excluded.</p>
+              <h2 className="text-base font-semibold text-[#0A1936]">Money Received</h2>
+              <p className="text-xs text-[#3B5998]">Only confirmed payments are counted — unpaid or reversed ones are left out.</p>
             </div>
             <div className="text-xl font-semibold text-[#1D4ED8] tabular-nums">
               {formatCents(earnedTotalCents, currency)}
@@ -233,7 +233,7 @@ export const ReportsPage: React.FC = () => {
 
         {/* Activity Breakdown */}
         <Card className="lg:col-span-5 p-5 space-y-4">
-          <h2 className="text-base font-semibold text-[#0A1936]">Activity Report</h2>
+          <h2 className="text-base font-semibold text-[#0A1936]">Team Activity</h2>
           {activityByType.length === 0 ? (
             <p className="text-xs text-[#3B5998]">No activities in selected date range.</p>
           ) : (
@@ -270,10 +270,11 @@ export const ReportsPage: React.FC = () => {
           <div>
             <h2 className="text-base font-semibold text-[#0A1936] flex items-center gap-2">
               <Upload className="w-4 h-4 text-[#1D4ED8]" />
-              Organization CSV Import (Preview &amp; Validation)
+              Import Organizations from a File
             </h2>
             <p className="text-xs text-[#3B5998] mt-0.5">
-              Max 500 rows per import. Columns: <code>name,org_type,country,city_region,website</code>
+              Upload a spreadsheet (CSV) with up to 500 rows. Columns:{' '}
+              <code>name, org_type, country, city_region, website</code>
             </p>
           </div>
 

@@ -32,7 +32,7 @@ export const InvoicesPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ 
     <div className="space-y-6">
       <PageHeader
         title="Invoices & Payments"
-        subtitle="Sequential invoice numbering on issue · Manual payment entry & reversals"
+        subtitle="Invoices are numbered automatically · Record customer payments here"
       />
 
       {uninvoicedOrders.length > 0 && (

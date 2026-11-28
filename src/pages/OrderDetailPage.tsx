@@ -40,7 +40,7 @@ export const OrderDetailPage: React.FC<{ orderId: string; onNavigate: (r: NavRou
     return (
       <EmptyState
         title="Order not accessible"
-        description="This order does not exist or is outside your current visibility scope."
+        description="This order doesn't exist, or you don't have access to it."
         action={<Button onClick={() => onNavigate({ page: 'invoices' })}>Go to Invoices &amp; Orders</Button>}
       />
     );

@@ -111,7 +111,7 @@ export const ContactsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ 
     <div className="space-y-6">
       <PageHeader
         title="Contacts"
-        subtitle="Stakeholders with multi-organization memberships (up to 20) and outreach consent"
+        subtitle="The people you work with — their details, emails and contact preferences"
         actions={
           currentUser && !isReadOnlyRole(currentUser.role) ? (
             <Button
@@ -225,7 +225,7 @@ export const ContactsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ 
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         title="New Contact"
-        subtitle="Requires at least a phone number or personal email. Unique email and phone enforced."
+        subtitle="Add at least a phone number or an email. Duplicates aren't allowed."
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && <ErrorAlert message={error} />}
@@ -259,7 +259,7 @@ export const ContactsPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ 
             <Field label="Preferred Language">
               <input type="text" value={language} onChange={(e) => setLanguage(e.target.value)} className={inputCls} />
             </Field>
-            <Field label="Consent Basis">
+            <Field label="Permission to Contact">
               <input type="text" value={consentBasis} onChange={(e) => setConsentBasis(e.target.value)} className={inputCls} />
             </Field>
           </div>

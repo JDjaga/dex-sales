@@ -71,7 +71,7 @@ export const InvoiceDetailPage: React.FC<{ invoiceId: string; onNavigate: (r: Na
     return (
       <EmptyState
         title="Invoice not accessible"
-        description="This invoice does not exist or is outside your visibility scope."
+        description="This invoice doesn't exist, or you don't have access to it."
         action={<Button onClick={() => onNavigate({ page: 'invoices' })}>Back to Invoices</Button>}
       />
     );

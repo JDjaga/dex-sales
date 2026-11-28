@@ -27,7 +27,7 @@ export const QuotesPage: React.FC<{ onNavigate: (r: NavRoute) => void }> = ({ on
     <div className="space-y-6">
       <PageHeader
         title="Quotes"
-        subtitle="Snapshot-locked commercial proposals created on open opportunities"
+        subtitle="Price proposals you send to customers, created from open deals"
       />
 
       <div className="flex flex-col sm:flex-row gap-3">

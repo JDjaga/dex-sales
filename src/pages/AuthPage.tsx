@@ -24,9 +24,7 @@ export const AuthPage: React.FC = () => {
   const handleResetRequest = (e: React.FormEvent) => {
     e.preventDefault();
     setResetSentMsg(
-      `Password reset preview: In a connected deployment, recovery instructions would be emailed to ${
-        resetEmail || 'your address'
-      }. In this static Vercel demo, all demo accounts use password "demo" or one-click role sign-in below.`
+      `In this demo there's no real email — every account uses the password "demo". Easiest option: click any account on the right to sign in instantly.`
     );
   };
 
@@ -41,7 +39,7 @@ export const AuthPage: React.FC = () => {
             <div className="mt-6">
               <h1 className="text-xl font-semibold text-[#0A1936]">Sign in to DeX Sales</h1>
               <p className="text-sm text-[#3B5998] mt-1">
-                Lightweight institutional engagement and deal desk workspace.
+                Your sales workspace — customers, deals and follow-ups in one place.
               </p>
             </div>
 
@@ -115,8 +113,8 @@ export const AuthPage: React.FC = () => {
         <Card className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between bg-white">
           <div>
             <InfoBanner
-              title="Demo Workspace Accounts"
-              body="Sample institutional data is loaded in your browser. Click any role below to sign in immediately, or use password &ldquo;demo&rdquo;."
+              title="Try a Demo Account"
+              body="Sample data is loaded in this browser. Click an account below to sign in instantly — or use the password &ldquo;demo&rdquo;."
             />
 
             <div className="mt-5 space-y-2">
@@ -152,7 +150,7 @@ export const AuthPage: React.FC = () => {
         open={resetOpen}
         onClose={() => setResetOpen(false)}
         title="Account & Password Recovery"
-        subtitle="Static demo recovery check"
+        subtitle="Demo password help"
       >
         {resetSentMsg ? (
           <div className="space-y-4">
